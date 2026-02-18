@@ -1,2 +1,2 @@
-# pl-fem-vectoriel
-Modular FEM framework for vectorial simulation of polymer photonic lanterns
+#  PL-FEM Vectoriel: A Modular FEM Framework for Fully Vectorial Simulation and Dataset Generation of Polymer Photonic Lantern Multiplexers/Demultiplexers: 
+
