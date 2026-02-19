@@ -391,13 +391,10 @@ Fabrication imperfections (core displacement disorder, surface roughness, index 
 
 ## Roadmap
 
-- [x] **v18.10** — Vectorial H-field FEM, P2 elements, Cauchy dispersion, 2,000-sample dataset
-- [ ] **v18.11** — Recalculate all 2,000 configs with Cauchy model across all 5 wavelengths
-- [ ] **v19.0** — Nédélec edge-element backend, full IP-Dip Sellmeier equation
-- [ ] **v19.1** — Stochastic fabrication perturbation layer (DLL process model)
-- [ ] **v20.0** — GPU acceleration (CuPy sparse eigensolvers)
+- [x] **v1** — Vectorial H-field FEM, P2 elements, Cauchy dispersion, 2,000-sample dataset
 
----
+
+
 
 ## Contributing
 
