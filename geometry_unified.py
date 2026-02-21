@@ -3,8 +3,8 @@
 """
 GEOMETRY_UNIFIED.PY — Géométrie unifiée MCF / Taper / MMF
 ===========================================================
-Version : V18.8
-Date    : 2026-02-17
+Version : V.1
+
 
 Intègre en un seul module cohérent :
   1.  MCFGeometry      — positions cœurs, ε(x,y), attributs unifiés
@@ -773,3 +773,4 @@ if __name__ == '__main__':
 
     print(f"\n{'✅ Tous les tests passés' if ok else '❌ Certains tests ont échoué'}")
     print("=" * 65)
+
