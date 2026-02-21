@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Dataset Record Structure for Photonic Lantern V1(OPTIMIZED)
+Dataset Record Structure for Photonic Lantern Mux/Demux  V1
 ================================================================
 Dataclass pour stocker résultats simulation complète
 
@@ -13,7 +13,7 @@ AMÉLIORATIONS 2025:
 - Performance index pondéré réaliste
 - Sérialisation optimisée + compatibilité ML
 
-AUTEUR: Photonic Lantern Project V17.1
+AUTEUR: Photonic Lantern Project V.1
 DATE: 2024 → mise à jour 2025
 """
 
@@ -341,4 +341,5 @@ if __name__ == '__main__':
     print("  ✓ Validation renforcée")
     print("  ✓ CSV row enrichi")
     print("  ✓ Summary & performance index")
+
     print("=" * 70)
