@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Vectorial H-field FEM Solver — 
+Vectorial H-field FEM Solver — V18.10 Optimized
 ==============================================
 
 Formulation H-field transverse avec pénalité div (Rahman & Davies 1984 + Hayata & Koshiba 1986)
@@ -71,22 +71,38 @@ def _polarization_from_interp(evec_x: np.ndarray,
                               y_dof: np.ndarray,
                               geometry) -> Tuple[str, float, float, float]:
     """
-    Polarisation depuis Hx et Hy (ratio énergie transverses).
+    Polarisation depuis Hx et Hy — V18.11 CORRIGÉ.
+
+    Calcul sur les DOFs situés dans les cœurs uniquement (physiquement correct).
+    Classification affinée :
+      ratio = P_x / P_y  (énergie H dans les cœurs)
+      > 10  → TE-like    (dominante x, quasi-linéaire)
+      > 2.5 → HE-like    (x dominant mais couplé)
+      > 0.4 → Hybrid     (vrai hybride LP-like)
+      > 0.1 → EH-like    (y dominant mais couplé)
+      ≤ 0.1 → TM-like    (dominante y)
+
+    La PDL est calculée en dB à partir du même ratio.
+    P_x et P_y sont retournés pour le calcul XT vectoriel.
     """
     in_core = np.zeros(len(x_dof), dtype=bool)
     for (cx, cy), r in zip(geometry.positions, geometry.core_radii):
         in_core |= (x_dof - cx)**2 + (y_dof - cy)**2 <= r**2
 
-    P_x = float(np.sum(evec_x[in_core]**2)) + 1e-30
-    P_y = float(np.sum(evec_y[in_core]**2)) + 1e-30
-    ratio = P_x / P_y
-    PDL = float(np.clip(10.*np.log10(max(P_x,P_y)/min(P_x,P_y)), 0., 50.))
+    # Fallback sur tout le domaine si aucun DOF dans les cœurs
+    mask = in_core if np.any(in_core) else np.ones(len(x_dof), dtype=bool)
 
-    if ratio > 20:      pol = 'TE-like'
-    elif ratio < 0.05:  pol = 'TM-like'
-    elif ratio > 3.0:   pol = 'HE-like'
-    elif ratio < 0.33:  pol = 'EH-like'
-    else:               pol = 'Hybrid'
+    P_x = float(np.sum(evec_x[mask]**2)) + 1e-30
+    P_y = float(np.sum(evec_y[mask]**2)) + 1e-30
+    ratio = P_x / P_y
+    PDL = float(np.clip(10. * np.log10(max(P_x, P_y) / min(P_x, P_y)), 0., 50.))
+
+    # Seuils affinés V18.11 — classification physique LP/HE/EH
+    if   ratio > 10.0:  pol = 'TE-like'
+    elif ratio >  2.5:  pol = 'HE-like'
+    elif ratio >  0.4:  pol = 'Hybrid'
+    elif ratio >  0.1:  pol = 'EH-like'
+    else:               pol = 'TM-like'
 
     return pol, PDL, P_x, P_y
 
