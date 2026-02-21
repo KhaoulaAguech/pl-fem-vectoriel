@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Adaptive Mesh Generation for Photonic Lantern (OPTIMIZED)
+Adaptive Mesh Generation for Photonic Lantern V17.1 (OPTIMIZED)
 ================================================================
 Génération maillage FEM adaptatif avec cache intelligent
 
-AMÉLIORATIONS :
+AMÉLIORATIONS V.1:
 - Limite mémoire cache (pas juste nombre entrées)
 - Protection boucle infinie raffinement
 - Validation robuste qualité mesh
 - Stats cache détaillées
 - Support mesh sauvegarde/chargement
 
-
+AUTEUR: Photonic Lantern Project V.1
+DATE: 2024
 """
 
 import numpy as np
@@ -229,8 +230,8 @@ class MeshGenerator:
         ✅ PROTECTION: Limite iterations raffinement pour éviter boucle infinie
         """
         R = geometry.domain_radius
-        n_base = int(35 + 35 * refinement)
-        n_base = max(n_base, 20)  # Minimum
+        n_base = int(25 + 20 * refinement)   # V18.11 : réduit (était 35+35) — gaine peu critique
+        n_base = max(n_base, 16)  # Minimum
 
         logger.debug(f"Mesh generation: R={R:.1f}µm, n_base={n_base}, refinement={refinement:.2f}")
 
@@ -240,8 +241,11 @@ class MeshGenerator:
         X, Y = np.meshgrid(x, y)
         points = np.vstack([X.ravel(), Y.ravel()])
 
-        # 2. Raffinement radial cœurs
-        n_refine_theta = max(int(24 * refinement), 16)
+        # 2. Raffinement radial cœurs — V18.11 OPTIMISÉ
+        # Stratégie : densité λ/12 dans les cœurs, λ/6 à l'interface, λ/3 en gaine proche.
+        # On réduit n_r_interior et n_r_interface qui étaient surdimensionnés
+        # (52k pts pour 9 cœurs → objectif ~15-20k pts sans perte de précision).
+        n_refine_theta = max(int(16 * refinement), 12)
         theta = np.linspace(0, 2*np.pi, n_refine_theta, endpoint=False)
 
         # Attributs unifiés (MCFGeometry / PhotonicLanternGeometry)
@@ -254,18 +258,18 @@ class MeshGenerator:
         r_core_ref = float(getattr(geometry, 'r_core', np.mean(core_radii)))
 
         for (cx, cy), r in zip(positions, core_radii):
-            
-            # Intérieur cœur (très dense)
-            n_r_interior = max(int(24 * refinement), 18)
+
+            # Intérieur cœur (dense — λ/12)
+            n_r_interior = max(int(14 * refinement), 10)
             r_interior = np.linspace(0, r * 0.95, n_r_interior)
             Rg, Tg = np.meshgrid(r_interior, theta)
             x_int = cx + Rg.ravel() * np.cos(Tg.ravel())
             y_int = cy + Rg.ravel() * np.sin(Tg.ravel())
             points = np.hstack([points, np.vstack([x_int, y_int])])
 
-            # Interface + proche extérieur (ultra-dense)
-            n_r_interface = max(int(32 * refinement), 24)
-            r_interface = np.linspace(r * 0.92, r * 1.25, n_r_interface)
+            # Interface cœur-gaine (ultra-dense — gradient d'indice)
+            n_r_interface = max(int(18 * refinement), 14)
+            r_interface = np.linspace(r * 0.90, r * 1.20, n_r_interface)
             Rg, Tg = np.meshgrid(r_interface, theta)
             x_intf = cx + Rg.ravel() * np.cos(Tg.ravel())
             y_intf = cy + Rg.ravel() * np.sin(Tg.ravel())
