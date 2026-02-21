@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-PHOTONIC LANTERN V17.1 - VERSION OPTIMISÉE POUR DATASET 2000+ VALIDÉS
+PHOTONIC LANTERN V.1 - VERSION OPTIMISÉE POUR DATASET 2000+ VALIDÉS
 Avec logs détaillés n_eff bruts + modes trouvés / guidés
 Filtre n_eff assoupli + beta ajouté + debug amélioré
 """
