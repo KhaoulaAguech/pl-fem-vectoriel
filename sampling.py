@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Smart Sampling Strategies for Photonic Lantern V17.1 (OPTIMIZED)
+Smart Sampling Strategies for Photonic Lantern V.1 (OPTIMIZED)
 =================================================================
 Stratégies échantillonnage intelligent pour exploration espace paramétrique
 
-AMÉLIORATIONS V17.1:
+AMÉLIORATIONS V.1:
 - Seeds reproductibles (déterministe basé sur base_seed)
 - Validation robuste avec gestion erreurs
 - Diversité garantie (clustering detection)
 - Métriques coverage détaillées
 - Support sampling incrémental
 
-AUTEUR: Photonic Lantern Project V17.1
-DATE: 2024
+AUTEUR: Photonic Lantern Project V.1
+
 """
 
 import numpy as np
