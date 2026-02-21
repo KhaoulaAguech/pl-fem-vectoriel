@@ -3,7 +3,8 @@
 """
 GEOMETRY_UNIFIED.PY — Géométrie unifiée MCF / Taper / MMF
 ===========================================================
-
+Version : V18.8
+Date    : 2026-02-17
 
 Intègre en un seul module cohérent :
   1.  MCFGeometry      — positions cœurs, ε(x,y), attributs unifiés
